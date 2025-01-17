@@ -20,7 +20,7 @@ notes-app-back-end
 │ │ └── routes.js
 │ ├── services
 │ │ └── inMemory
-│ │ └── NotesService.js
+│ │   └── NotesService.js
 │ └── server.js
 └── package.json
 ```
