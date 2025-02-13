@@ -12,31 +12,10 @@ const UsersValidator = require('./validator/users');
 
 const init = async () => {
   /**
-   * V1.0.0
-   * deprecated
-   *
-   *
-  const server = Hapi.server({
-    port: 3000,
-    // eslint-disable-next-line no-undef
-    host: process.env.NODE_ENV !== 'production' ? 'localhost' : '0.0.0.0',
-    routes: {
-      cors: {
-        origin: ['*'],
-      },
-    },
-  });
-
-  server.route(routes);
-
-  await server.start();
-  console.log(`Server berjalan pada ${server.info.uri}`);
-  */
-
-  /**
    * V2.0.0
    */
   const notesService = new NotesService();
+  const usersService = new UsersService();
 
   const server = Hapi.Server({
     // eslint-disable-next-line no-undef
@@ -67,13 +46,22 @@ const init = async () => {
     return h.continue;
   });
 
-  await server.register({
-    plugin: notes,
-    options: {
-      service: notesService,
-      validator: NotesValidator,
+  await server.register([
+    {
+      plugin: notes,
+      options: {
+        service: notesService,
+        validator: NotesValidator,
+      },
     },
-  });
+    {
+      plugin: users,
+      options: {
+        service: usersService,
+        validator: UsersValidator,
+      },
+    },
+  ]);
 
   await server.start();
   console.log(`Server running on ${server.info.uri}`);
