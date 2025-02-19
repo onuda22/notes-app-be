@@ -1,15 +1,20 @@
 require('dotenv').config();
 
 const Hapi = require('@hapi/hapi');
+const Jwt = require('@hapi/jwt');
+const ClientError = require('./exceptions/ClientError');
+
+//Notes
 const notes = require('./api/notes');
 const NotesService = require('./services/postgres/NotesService');
 const NotesValidator = require('./validator/notes');
-const ClientError = require('./exceptions/ClientError');
 
+//Users
 const users = require('./api/users');
 const UsersService = require('./services/postgres/UsersService');
 const UsersValidator = require('./validator/users');
 
+//Authentications
 const authentications = require('./api/authentications');
 const AuthenticationsService = require('./services/postgres/AuthenticationsService');
 const TokenManager = require('./tokenize/TokenManager');
@@ -33,6 +38,32 @@ const init = async () => {
         origin: ['*'],
       },
     },
+  });
+
+  //Registrasi plugin eksternal
+  await server.register([
+    {
+      plugin: Jwt,
+    },
+  ]);
+
+  //Mendefinisikan strategi autentikasi JWT
+  server.auth.strategy('notesapp_jwt', 'jwt', {
+    // eslint-disable-next-line no-undef
+    keys: process.env.ACCESS_TOKEN_KEY,
+    verify: {
+      aud: false,
+      iss: false,
+      sub: false,
+      // eslint-disable-next-line no-undef
+      maxAgeSec: process.env.ACCESS_TOKEN_AGE,
+    },
+    validate: (artifacts) => ({
+      isValid: true,
+      credentials: {
+        id: artifacts.decoded.payload.id,
+      },
+    }),
   });
 
   server.ext('onPreResponse', (request, h) => {
