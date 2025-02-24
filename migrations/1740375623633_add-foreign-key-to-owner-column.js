@@ -33,4 +33,10 @@ exports.up = (pgm) => {
 exports.down = (pgm) => {
   //menghapus constraint fk_notes.owner_users.id pada tabel notes
   pgm.dropConstraint('notes', 'fk_notes.owner_users.id');
+
+  //mengubah nilai owner old_notes pada note menjadi NULL
+  pgm.sql("UPDATE notes SET owner = NULL WHERE owner = 'old_notes'");
+
+  //menghapus user baru
+  pgm.sql("DELETE FROM users WHERE id = 'old_notes'");
 };
