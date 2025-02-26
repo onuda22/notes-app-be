@@ -9,7 +9,7 @@ class CollaborationsHandler {
     autoBind(this);
   }
 
-  async postCollabortionHandler(request, h) {
+  async postCollaborationHandler(request, h) {
     this._validator.validateCollaborationPayload(request.payload);
     const { id: credentialId } = request.auth.credentials;
     const { noteId, userId } = request.payload;
