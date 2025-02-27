@@ -20,12 +20,12 @@ class CollaborationsService {
       throw new InvariantError('Kolaborasi gagal ditambahkan');
     }
 
-    return result.rows[0];
+    return result.rows[0].id;
   }
 
   async deleteCollaboration(noteId, userId) {
     const query = {
-      text: 'DELETE FROM collaboration WHERE note_id = $1 AND user_id = $2 RETURNING id',
+      text: 'DELETE FROM collaborations WHERE note_id = $1 AND user_id = $2 RETURNING id',
       values: [noteId, userId],
     };
 
