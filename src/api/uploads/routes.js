@@ -15,7 +15,7 @@ const routes = (handler) => [
   },
   {
     method: 'GET',
-    path: '/uploads/{param*}',
+    path: '/upload/{param*}',
     handler: {
       directory: {
         // eslint-disable-next-line no-undef
